@@ -1,7 +1,8 @@
-FROM php:8.2-apache
+FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    nginx \
     git \
     curl \
     libpng-dev \
@@ -23,8 +24,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
-# Configure Apache
-RUN a2enmod rewrite
+# Configure Nginx
+COPY nginx.conf /etc/nginx/sites-available/default
 
 # Set working directory
 WORKDIR /var/www/html
